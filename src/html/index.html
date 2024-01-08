@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <!-- 引入vue和vue-router -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.3/dist/vue-router.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha384-CKL0Un8zZv9fTNQ4YJ3YYPQbDj5Ezh/3NvMh1aX02m1T1J2Uq5to9+tPuphA2DEn" crossorigin="anonymous">
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4389651_ayfjfcntckg.css">
+    <!-- 引入axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/index.js"></script>
+</head>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+        width: 100%;
+        float: right;
+    }
+
+    #head {
+        width: 100%;
+        height: 80px;
+        background: rgba(26, 212, 131, 1);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    #head a {
+        text-decoration: none;
+        color: white;
+    }
+
+    #head ul {
+        list-style: none;
+        display: flex;
+    }
+
+    #head li {
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+
+    #search input {
+        width: 20%;
+        height: 100%;
+        float: right;
+        opacity: 1;
+        border-radius: 23px;
+        background: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(223, 222, 222, 1);
+        padding: 10px;
+        box-shadow: inset 0px 2px 16px rgba(6, 0, 1, 0.31);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #body {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    #introduce {
+        width: 100%;
+    }
+
+    #introduce th,
+    #introduce td {
+        text-align: center;
+        padding: 15px;
+    }
+
+    #Login_button {
+        opacity: 1;
+        width: 100%;
+        background: white;
+        border: 1px solid white;
+        margin-left: 5%;
+        font-size: 14px;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .banners {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 500px;
+        margin: 50px auto;
+    }
+
+    .images {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 500%;
+    }
+
+    .images li {
+        float: left;
+        width: 20%;
+    }
+
+    .banners img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .prev,
+    .next {
+        display: block;
+        position: absolute;
+        top: 50%;
+        margin-top: -15px;
+        width: 20px;
+        height: 30px;
+        background: rgba(0, 0, 0, .3);
+        text-align: center;
+        line-height: 30px;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .prev {
+        left: 0;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+    .next {
+        right: 0;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+
+    .dots {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 35px;
+        width: auto;
+        background: rgba(255, 255, 255, .3);
+        border-radius: 30px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .dots li {
+        width: 30px;
+        height: 30px;
+        background-color: #fff;
+        border-radius: 50%;
+        margin-right: 3.5px; /* 添加间隙 */
+        margin-left: 3.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dots .active {
+        background-color: #ff5000;
+    }
+
+    #searchButton {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+
+    #searchButton i {
+        position: absolute;
+        right: 10.5%;
+        top: 16%;
+    }
+</style>
+
+<body>
+<div id="app">
+    <header-component></header-component>
+    <table>
+        <tr>
+            <td>
+                <search-component></search-component>
+            </td>
+            <td>
+                <login-button></login-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <body-component></body-component>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+<!-- Vue组件的代码 -->
+
+<script>
+    // Header组件
+    Vue.component('header-component', {
+        template: `
+            <div id="head">
+                <ul>
+                    <li><a href="#hot-search">热搜榜</a></li>
+                    <li><a href="#movies">电影</a></li>
+                    <li><a href="#tv-shows">电视剧</a></li>
+                    <li><a href="#anime">动漫</a></li>
+                </ul>
+            </div>
+        `
+    });
+
+    // Search组件
+    Vue.component('search-component', {
+        template: `
+        <div id="search">
+            <input type="text" name="" id="" placeholder="请输入查找内容">
+            <a href="SearchResult.html"><button type="submit" id="searchButton"><i
+                        class="iconfont icon-sousuo"></i></button></a>
+        </div>
+    `,
+    });
+
+    // 登录按钮组件
+    Vue.component('login-button', {
+        template: `
+            <a href="Login.html"><button id="Login_button">登录</button></a>
+        `
+    });
+
+    // Body组件
+    Vue.component('body-component', {
+        template: `
+        <div id="body">
+            <div class="banners">
+                <ul class="images">
+                    <li>
+                        <a href="#"><img src="img/img1.jfif" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/img2.jfif" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/img3.jpg" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/img4.jfif" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="img/img5.jfif" alt=""></a>
+                    </li>
+                </ul>
+                <a href="javascript:;" class="prev"> &lt;</a>
+                <a href="javascript:;" class="next"> &gt;</a>
+                <ul class="dots">
+                </ul>
+            </div>
+            <table id="introduce">
+                <tr>
+                    <th><h1 id="hot-search" align="left">热搜榜</h1></th>
+                </tr>
+                <tr>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                </tr>
+                <tr>
+                    <th><h1 id="movies" align="left">电影</h1></th>
+                </tr>
+                <tr>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                </tr>
+
+                <tr>
+                    <th><h1 id="tv-shows" align="left">电视剧</h1></th>
+                </tr>
+                <tr>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                </tr>
+
+                <tr>
+                    <th><h1 id="anime" align="left">动漫</h1></th>
+                </tr>
+                <tr>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                    <td><img src="assets/logo.png" alt="" width="100%"></td>
+                </tr>
+            </table>
+        </div>
+    `
+    });
+
+    // 在Vue实例中发送GET请求获取影片信息
+    new Vue({
+        el: '#app',
+        data: {
+            movies: [] // 存放影片信息的数组
+        },
+        mounted() {
+            // 页面加载时发送GET请求获取影片信息
+            axios.get('/movie') // 假设你的影片信息接口是 /movie
+                .then(response => {
+                    // 请求成功，更新movies数组
+                    this.movies = response.data.data;
+                })
+                .catch(error => {
+                    // 请求失败，处理错误
+                    console.error('Error fetching movie data:', error);
+                });
+        }
+    });
+
+</script>
+</html>
